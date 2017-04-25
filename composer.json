@@ -1,0 +1,19 @@
+{
+    "name": "iutbay/yii2-mm",
+    "description": "Yii2 Media Manager Module",
+    "keywords": ["yii2"],
+    "homepage": "https://github.com/iutbay/yii2-mm",
+    "type": "yii2-module",
+    "authors": [
+        {
+            "name": "Kevin LEVRON",
+            "email": "kevin.levron@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": {"iutbay\\yii2\\mm\\": ""}
+    }
+}
