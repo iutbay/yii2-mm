@@ -9,13 +9,23 @@ class FileSystem extends \yii\base\Component
 {
 
     /**
+     * @var \League\Flysystem\Filesystem
+     */
+    public $fs;
+
+    /**
+     * @var string
+     */
+    public $directorySeparator = '/';
+
+    /**
      * @param string $path
      * @param boolean $recursive
      * @return array
      */
     public function listContents($path = '', $recursive = false)
     {
-        $contents = Yii::$app->fs->listContents($path, $recursive);
+        $contents = $this->fs->listContents($path, $recursive);
         return $this->filterContents($contents, $recursive);
     }
 
@@ -54,7 +64,7 @@ class FileSystem extends \yii\base\Component
      */
     public function __call($method, $parameters)
     {
-        return call_user_func_array([Yii::$app->fs, $method], $parameters);
+        return call_user_func_array([$this->fs, $method], $parameters);
     }
 
 }

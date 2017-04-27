@@ -77,15 +77,18 @@ class ApiController extends \yii\web\Controller
     {
         $fs = $this->module->fs;
 
-        $metas = $fs->getMetaData($path);
-        if (is_array($metas) && isset($metas['type'])) {
-            if ($metas['type']=='file' && $stream = $fs->readStream($path)) {
-                $response = Yii::$app->getResponse();
-                $attachmentName = preg_replace('#^.*/#', '', $path);
-                return $response->sendStreamAsFile($stream, $attachmentName);
+        if ($fs->has($path)) {            
+            $metas = $fs->getMetaData($path);
+            if (is_array($metas) && isset($metas['type'])) {
+                if ($metas['type']==='file' && $stream = $fs->readStream($path)) {
+                    $response = Yii::$app->getResponse();
+                    $attachmentName = preg_replace('#^.*/#', '', $path);
+                    return $response->sendStreamAsFile($stream, $attachmentName);
+                }
+                throw new \yii\web\BadRequestHttpException('Invalid path.');
             }
-            throw new \yii\web\BadRequestHttpException('Invalid path.');
         }
+        
         throw new \yii\web\NotFoundHttpException('The file does not exists.');
     }
 
@@ -97,6 +100,7 @@ class ApiController extends \yii\web\Controller
     protected function serializeModelErrors($model)
     {
         Yii::$app->getResponse()->setStatusCode(422, 'Data Validation Failed.');
+
         $result = [];
         foreach ($model->getFirstErrors() as $name => $message) {
             $result[] = [
