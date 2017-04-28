@@ -19,6 +19,19 @@ class FileSystem extends \yii\base\Component
     public $directorySeparator = '/';
 
     /**
+     * @var boolean
+     */
+    public $local;
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        $this->local = ($this->fs instanceof \creocoder\flysystem\LocalFilesystem);
+    }
+
+    /**
      * @param string $path
      * @param boolean $recursive
      * @return array
@@ -37,10 +50,7 @@ class FileSystem extends \yii\base\Component
     {
         $new = [];
         foreach ($contents as $f) {
-            if (preg_match('#\.thumbs#', $f['path'])) {
-                continue;
-            }
-            if ($recursive && isset($f['type']) && $f['type']==='dir') {
+            if ($recursive && isset($f['type']) && $f['type'] === 'dir') {
                 continue;
             }
             if (isset($f['basename'])) {

@@ -40,7 +40,6 @@ class Module extends \yii\base\Module
     /**
      * @var components\ImageCache
      */
-    public $ic;
     public $thumbsPath = '@webroot/thumbs';
     public $thumbsUrl = '@web/thumbs';
     public $thumbsSize = [150, 150];
@@ -58,11 +57,9 @@ class Module extends \yii\base\Module
             'directorySeparator' => $this->directorySeparator,
         ]);
 
-        $this->ic = new ImageCache([
+        Yii::$container->set('iutbay\yii2\mm\models\Thumb', [
             'fs' => $this->fs,
             'thumbsPath' => $this->thumbsPath,
-            'thumbsUrl' => $this->thumbsUrl,
-            'thumbsSize' => $this->thumbsSize,
         ]);
     }
 

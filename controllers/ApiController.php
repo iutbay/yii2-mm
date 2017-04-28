@@ -50,6 +50,9 @@ class ApiController extends \yii\web\Controller
         return $this->module->fs->listContents($path, $recursive);
     }
 
+    /**
+     * @return mixed
+     */
     public function actionUpload($path)
     {
         if (Yii::$app->request->method === 'OPTIONS') {
