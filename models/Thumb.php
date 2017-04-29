@@ -126,7 +126,7 @@ class Thumb extends \yii\base\Model
             file_put_contents($path, $stream);
             fclose($stream);
         } else {
-            $image = Image::thumbnail($stream, $this->size[0], $this->size[1], $this->resizeMode);
+            $image = Image::thumbnail($stream, $this->size[0], $this->size[1], self::$resizeMode);
             fclose($stream);
             if (!$image || !$image->save($path)) {
                 return false;
