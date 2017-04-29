@@ -24,8 +24,6 @@ class Thumb extends \yii\base\Model
     public $type;
     public $realPath;
 
-    public $resizeMode = ManipulatorInterface::THUMBNAIL_INSET;
-
     public static $extensions = [
         'jpg' => 'jpeg',
         'jpeg' => 'jpeg',
@@ -54,6 +52,16 @@ class Thumb extends \yii\base\Model
      * @var string thumbs url
      */
     public static $thumbsUrl;
+
+    /**
+     * @var string thumbs default size
+     */
+    public static $thumbsSize = self::SIZE_THUMB;
+
+    /**
+     * @var string resize mode
+     */
+    public $resizeMode = ManipulatorInterface::THUMBNAIL_INSET;
 
     /**
      * @inheritdoc
@@ -133,17 +141,19 @@ class Thumb extends \yii\base\Model
      * @param string $path
      * @param string $size
      */
-    public static function getThumbSrc($path, $size = self::SIZE_THUMB)
+    public static function getThumbSrc($path, $size = null)
     {
+        if ($size === null)
+            $size = self::$thumbsSize;
+
         $regexp = '#^(.*)\.(' . self::getExtensionsRegexp() . ')$#';
-        if (preg_match($regexp, $path, $matches)
-            && in_array($size, array_keys(self::$sizes))) {
+        if (preg_match($regexp, $path, $matches) && in_array($size, array_keys(self::$sizes))) {
             $size = self::$sizes[$size];
             $dstPath = "{$matches[1]}_{$size[0]}x{$size[1]}.{$matches[2]}";
-            return Url::to(self::$thumbsUrl.'/'.$dstPath, true);
+            return Url::to(self::$thumbsUrl . '/' . $dstPath, true);
         } else {
             throw new \yii\base\InvalidParamException();
-        }        
+        }
     }
 
     /**
@@ -160,7 +170,7 @@ class Thumb extends \yii\base\Model
             $size = self::SIZE_FULL;
             if (preg_match('#^(.*)_([0-9]+)x([0-9]+)$#', $name, $matches)) {
                 $name = $matches[1];
-                $size = [(int)$matches[2], (int)$matches[3]];
+                $size = [(int) $matches[2], (int) $matches[3]];
             }
             return [
                 'srcPath' => $name . '.' . $extension,
@@ -182,5 +192,5 @@ class Thumb extends \yii\base\Model
         $keys = array_keys(self::$extensions);
         return '(?i)' . join('|', $keys);
     }
-    
+
 }

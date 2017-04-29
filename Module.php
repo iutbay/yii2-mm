@@ -3,6 +3,7 @@
 namespace iutbay\yii2\mm;
 
 use Yii;
+use Imagine\Image\ManipulatorInterface;
 
 use iutbay\yii2\mm\components\FileSystem;
 use iutbay\yii2\mm\models\Thumb;
@@ -13,7 +14,7 @@ class Module extends \yii\base\Module
     public $controllerNamespace = 'iutbay\yii2\mm\controllers';
 
     /**
-     * @var components\FileSystem
+     * @var Custom filesystem
      */
     public $fs;
 
@@ -42,7 +43,8 @@ class Module extends \yii\base\Module
      */
     public $thumbsPath = '@webroot/thumbs';
     public $thumbsUrl = '@web/thumbs';
-    public $thumbsSize = [150, 150];
+    public $thumbsSize = Thumb::SIZE_THUMB;
+    public $resizeMode = ManipulatorInterface::THUMBNAIL_INSET;
 
     /**
      * @inheritdoc
@@ -60,6 +62,8 @@ class Module extends \yii\base\Module
         Thumb::$fs = $this->fs;
         Thumb::$thumbsPath = $this->thumbsPath;
         Thumb::$thumbsUrl = $this->thumbsUrl;
+        Thumb::$thumbsSize = $this->thumbsSize;
+        Thumb::$resizeMode = $this->resizeMode;
     }
 
     /**

@@ -23,10 +23,6 @@ class ThumbController extends \yii\web\Controller
         ]);
 
         if ($thumb->validate() && $thumb->save()) {
-//            $response = Yii::$app->getResponse();
-//            $response->headers->set('Content-type', 'image/'.$thumb->type);
-//            $response->headers->set('Content-Length', filesize($thumb->realPath));
-//            return $response->sendFile($thumb->realPath, null, ['inline' => true]);
             header('Content-type: image/' . $thumb->type);
             header('Content-Length: ' . filesize($thumb->realPath));
             readfile($thumb->realPath);

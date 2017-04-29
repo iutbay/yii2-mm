@@ -70,7 +70,7 @@ class ApiController extends \yii\web\Controller
             }
             return $this->serializeModelErrors($model);
         }
-        throw new \yii\web\BadRequestHttpException();  
+        throw new \yii\web\BadRequestHttpException();
     }
 
     /**
@@ -83,7 +83,7 @@ class ApiController extends \yii\web\Controller
         if ($fs->has($path)) {
             $metas = $fs->getMetaData($path);
             if (is_array($metas) && isset($metas['type'])) {
-                if ($metas['type']==='file' && $stream = $fs->readStream($path)) {
+                if ($metas['type'] === 'file' && $stream = $fs->readStream($path)) {
                     $response = Yii::$app->getResponse();
                     $attachmentName = preg_replace('#^.*/#', '', $path);
                     return $response->sendStreamAsFile($stream, $attachmentName);
@@ -91,7 +91,7 @@ class ApiController extends \yii\web\Controller
                 throw new \yii\web\BadRequestHttpException('Invalid path.');
             }
         }
-        
+
         throw new \yii\web\NotFoundHttpException('The file does not exists.');
     }
 
