@@ -26,7 +26,6 @@ class ThumbController extends \yii\web\Controller
             header('Content-type: image/' . $thumb->type);
             header('Content-Length: ' . filesize($thumb->realPath));
             readfile($thumb->realPath);
-            return;
         } else {
             throw new \yii\web\NotFoundHttpException();
         }

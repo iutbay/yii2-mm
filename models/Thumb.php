@@ -61,7 +61,7 @@ class Thumb extends \yii\base\Model
     /**
      * @var string resize mode
      */
-    public $resizeMode = ManipulatorInterface::THUMBNAIL_INSET;
+    public static $resizeMode = ManipulatorInterface::THUMBNAIL_INSET;
 
     /**
      * @inheritdoc
