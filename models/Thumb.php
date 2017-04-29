@@ -4,6 +4,7 @@ namespace iutbay\yii2\mm\models;
 
 use Yii;
 use yii\helpers\FileHelper;
+use yii\helpers\Url;
 use yii\imagine\Image;
 use Imagine\Image\ManipulatorInterface;
 
@@ -42,9 +43,17 @@ class Thumb extends \yii\base\Model
     /**
      * @var \iutbay\yii2\mm\components\FileSystem
      */
-    public $fs;
+    public static $fs;
 
-    public $thumbsPath;
+    /**
+     * @var string thumbs path
+     */
+    public static $thumbsPath;
+
+    /**
+     * @var string thumbs url
+     */
+    public static $thumbsUrl;
 
     /**
      * @inheritdoc
@@ -65,8 +74,8 @@ class Thumb extends \yii\base\Model
     {
         $this->$attribute = FileHelper::normalizePath($this->$attribute, '/');
 
-        $info = $this->getPathInfo($this->$attribute);
-        if (is_array($info) && $this->fs->has($info['srcPath'])) {
+        $info = self::getPathInfo($this->$attribute);
+        if (is_array($info) && self::$fs->has($info['srcPath'])) {
             $this->setAttributes($info, false);
         } else {
             $this->addError($attribute, 'Invalid path.');
@@ -92,11 +101,57 @@ class Thumb extends \yii\base\Model
     }
 
     /**
+     * save thumb
+     */
+    public function save()
+    {
+        $path = Yii::getAlias(self::$thumbsPath . '/' . $this->dstPath);
+        $folder = preg_replace('#/[^/]*$#', '', $path);
+        if (!file_exists($folder) && !FileHelper::createDirectory($folder))
+            return false;
+
+        $stream = self::$fs->readStream($this->srcPath);
+        if (!is_resource($stream))
+            return false;
+
+        if ($this->size === self::SIZE_FULL) {
+            file_put_contents($path, $stream);
+            fclose($stream);
+        } else {
+            $image = Image::thumbnail($stream, $this->size[0], $this->size[1], $this->resizeMode);
+            fclose($stream);
+            if (!$image || !$image->save($path)) {
+                return false;
+            }
+        }
+        $this->realPath = $path;
+        return true;
+    }
+
+    /**
+     * Get thumb src
+     * @param string $path
+     * @param string $size
+     */
+    public static function getThumbSrc($path, $size = self::SIZE_THUMB)
+    {
+        $regexp = '#^(.*)\.(' . self::getExtensionsRegexp() . ')$#';
+        if (preg_match($regexp, $path, $matches)
+            && in_array($size, array_keys(self::$sizes))) {
+            $size = self::$sizes[$size];
+            $dstPath = "{$matches[1]}_{$size[0]}x{$size[1]}.{$matches[2]}";
+            return Url::to(self::$thumbsUrl.'/'.$dstPath, true);
+        } else {
+            throw new \yii\base\InvalidParamException();
+        }        
+    }
+
+    /**
      * Get info from path
      * @param string $path
      * @return null|array
      */
-    private function getPathInfo($path)
+    public static function getPathInfo($path)
     {
         $regexp = '#^(.*)\.(' . self::getExtensionsRegexp() . ')$#';
         if (preg_match($regexp, $path, $matches)) {
@@ -119,31 +174,6 @@ class Thumb extends \yii\base\Model
     }
 
     /**
-     * 
-     */
-    public function save()
-    {
-        $path = Yii::getAlias($this->thumbsPath . '/' . $this->dstPath);
-        $stream = $this->fs->readStream($this->srcPath);
-
-        if (!is_resource($stream))
-            return false;
-
-        if ($this->size === self::SIZE_FULL) {
-            file_put_contents($path, $stream);
-            fclose($stream);
-        } else {
-            $image = Image::thumbnail($stream, $this->size[0], $this->size[1], $this->resizeMode);
-            fclose($stream);
-            if (!$image || !$image->save($path)) {
-                return false;
-            }
-        }
-        $this->realPath = $path;
-        return true;
-    }
-
-    /**
      * Get extensions regexp
      * @return string regexp
      */
@@ -152,5 +182,5 @@ class Thumb extends \yii\base\Model
         $keys = array_keys(self::$extensions);
         return '(?i)' . join('|', $keys);
     }
-
+    
 }

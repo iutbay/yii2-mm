@@ -5,6 +5,8 @@ namespace iutbay\yii2\mm\components;
 use Yii;
 use yii\helpers\Url;
 
+use iutbay\yii2\mm\models\Thumb;
+
 class FileSystem extends \yii\base\Component
 {
 
@@ -58,8 +60,8 @@ class FileSystem extends \yii\base\Component
                     continue;
             }
             if (isset($f['extension'])) {
-                if (in_array($f['extension'], ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
-                    //$f['thumb'] = Url::to(Yii::$app->imageCache->thumbSrc($this->sourceUrl . '/' . $f['path']), true);
+                if (in_array($f['extension'], array_keys(Thumb::$extensions))) {
+                    $f['thumb'] = Thumb::getThumbSrc($f['path']);
                 }
             }
             $new[] = $f;

@@ -5,7 +5,7 @@ namespace iutbay\yii2\mm;
 use Yii;
 
 use iutbay\yii2\mm\components\FileSystem;
-use iutbay\yii2\mm\components\ImageCache;
+use iutbay\yii2\mm\models\Thumb;
 
 class Module extends \yii\base\Module
 {
@@ -57,10 +57,9 @@ class Module extends \yii\base\Module
             'directorySeparator' => $this->directorySeparator,
         ]);
 
-        Yii::$container->set('iutbay\yii2\mm\models\Thumb', [
-            'fs' => $this->fs,
-            'thumbsPath' => $this->thumbsPath,
-        ]);
+        Thumb::$fs = $this->fs;
+        Thumb::$thumbsPath = $this->thumbsPath;
+        Thumb::$thumbsUrl = $this->thumbsUrl;
     }
 
     /**

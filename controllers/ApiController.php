@@ -80,7 +80,7 @@ class ApiController extends \yii\web\Controller
     {
         $fs = $this->module->fs;
 
-        if ($fs->has($path)) {            
+        if ($fs->has($path)) {
             $metas = $fs->getMetaData($path);
             if (is_array($metas) && isset($metas['type'])) {
                 if ($metas['type']==='file' && $stream = $fs->readStream($path)) {
