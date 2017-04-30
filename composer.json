@@ -12,7 +12,8 @@
     ],
     "require": {
         "yiisoft/yii2": "*",
-        "yiisoft/yii2-imagine": "*"
+        "yiisoft/yii2-imagine": "*",
+        "creocoder/yii2-flysystem": "*"
     },
     "autoload": {
         "psr-4": {"iutbay\\yii2\\mm\\": ""}
