@@ -89,6 +89,7 @@ class ApiController extends \yii\web\Controller
     public function actionDownload($path)
     {
         $fs = $this->module->fs;
+        $path = $fs->normalizePath($path);
 
         if ($fs->has($path)) {
             $metas = $fs->getMetaData($path);
