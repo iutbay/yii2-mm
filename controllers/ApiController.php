@@ -5,6 +5,7 @@ namespace iutbay\yii2\mm\controllers;
 use Yii;
 use yii\web\Response;
 use yii\web\UploadedFile;
+use yii\helpers\FileHelper;
 
 use iutbay\yii2\mm\models\UploadForm;
 
@@ -47,21 +48,30 @@ class ApiController extends \yii\web\Controller
             //Yii::$app->response->headers->set('Allow', 'GET');
             return;
         }
-        return $this->module->fs->listContents($path, $recursive);
+
+        $fs = $this->module->fs;
+        $path = $fs->normalizePath($path);
+        if (!empty($path) && !$fs->has($path)) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+
+        return $fs->listContents($path, $recursive);
     }
 
     /**
      * @return mixed
      */
-    public function actionUpload($path)
+    public function actionUpload()
     {
-        if (Yii::$app->request->method === 'OPTIONS') {
+        $request = Yii::$app->getRequest();
+        if ($request->method === 'OPTIONS') {
             //Yii::$app->response->headers->set('Allow', 'POST');
             return;
         }
 
-        $model = new UploadForm(['path' => $path]);
-        if (Yii::$app->request->isPost) {
+        $model = new UploadForm();
+        if ($request->isPost) {
+            $model->path = $request->post('path');
             $model->file = UploadedFile::getInstance($model, 'file');
             if ($model->upload()) {
                 $response = Yii::$app->getResponse();

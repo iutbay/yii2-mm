@@ -3,7 +3,7 @@
 namespace iutbay\yii2\mm\models;
 
 use Yii;
-use yii\web\UploadedFile;
+use yii\helpers\FileHelper;
 
 class UploadForm extends \yii\base\Model
 {
@@ -14,7 +14,7 @@ class UploadForm extends \yii\base\Model
     public $path;
 
     /**
-     * @var UploadedFile
+     * @var \yii\web\UploadedFile
      */
     public $file;
 
@@ -24,6 +24,9 @@ class UploadForm extends \yii\base\Model
     public function rules()
     {
         return [
+            [['path', 'file'], 'required', 'strict' => true],
+            ['path', 'string'],
+            ['path', 'validatePath'],
             [
                 ['file'], 'file',
                 'skipOnEmpty' => false,
@@ -44,6 +47,21 @@ class UploadForm extends \yii\base\Model
     }
 
     /**
+     * Validate path
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function validatePath($attribute, $params)
+    {
+        $fs = Yii::$app->getModule('mm')->fs;
+        $this->$attribute = $fs->normalizePath($this->$attribute);
+
+        if (!empty($this->$attribute) && !$fs->has($this->$attribute)) {
+            $this->addError($attribute, 'Invalid path.');
+        }
+    }
+
+    /**
      * Upload files
      */
     public function upload()
@@ -52,16 +70,26 @@ class UploadForm extends \yii\base\Model
             $file = $this->file;
             $fs = Yii::$app->getModule('mm')->fs;
             $path = "{$this->path}/{$file->baseName}.{$file->extension}";
-            if ($stream = fopen($file->tempName, 'r+')) {
-                $fs->writeStream($path, $stream);
-                fclose($stream);                
-                return true;
-            } else {
-                return false;
+
+            $counter = 1;
+            while ($fs->has($path)) {
+                $path = "{$this->path}/{$file->baseName}_{$counter}.{$file->extension}";
+                $counter++;
             }
-        } else {
-            return false;
+
+            if ($stream = fopen($file->tempName, 'r+')) {
+                $write = $fs->writeStream($path, $stream);
+                fclose($stream);                
+                if ($write) {
+                    return true;
+                } else {
+                    $this->addError('path', 'Failed to write file.');
+                }
+            } else {
+                $this->addError('file', 'Failed to get file.');
+            }
         }
+        return false;
     }
 
 }

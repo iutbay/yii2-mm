@@ -3,6 +3,7 @@
 namespace iutbay\yii2\mm\components;
 
 use Yii;
+use yii\helpers\FileHelper;
 use yii\helpers\Url;
 
 use iutbay\yii2\mm\models\Thumb;
@@ -31,6 +32,14 @@ class FileSystem extends \yii\base\Component
     public function init()
     {
         $this->local = ($this->fs instanceof \creocoder\flysystem\LocalFilesystem);
+    }
+
+    /**
+     * @param string $path
+     */    
+    public function normalizePath($path)
+    {
+        return FileHelper::normalizePath($path, $this->directorySeparator);
     }
 
     /**

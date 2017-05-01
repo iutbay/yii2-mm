@@ -54,6 +54,9 @@ class Module extends \yii\base\Module
         parent::init();
         Yii::setAlias('@mm', __DIR__);
 
+        if (!isset(Yii::$app->{$this->fsComponent}))
+            throw new \yii\base\InvalidConfigException();
+
         $this->fs = new FileSystem([
             'fs' => Yii::$app->{$this->fsComponent},
             'directorySeparator' => $this->directorySeparator,
