@@ -7,7 +7,7 @@ use yii\web\AssetBundle;
 class MediaManagerAsset extends AssetBundle
 {
 
-    public $basePath = '@vendor/iutbay/yii2-mm/assets/mm';
+    public $sourcePath = '@vendor/iutbay/yii2-mm/assets/mm';
     public $css = [
         'mm.min.css',
     ];

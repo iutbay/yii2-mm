@@ -3,6 +3,7 @@
 namespace iutbay\yii2\mm\widgets;
 
 use Yii;
+use yii\helpers\Html;
 use yii\helpers\Json;
 
 use iutbay\yii2\mm\widgets\MediaManagerAsset;
@@ -21,6 +22,7 @@ class MediaManager extends \yii\base\Widget
      */
     public function run()
     {
+        echo Html::tag('div', '', ['id' => $this->getId()]);
         $this->registerClientScript();
     }
 
