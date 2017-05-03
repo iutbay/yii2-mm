@@ -11,6 +11,9 @@ use iutbay\yii2\mm\widgets\MediaManagerAsset;
 class MediaManagerInput extends \yii\widgets\InputWidget
 {
 
+    /**
+     * @var boolean
+     */
     public $multiple = false;
 
     /**
@@ -60,6 +63,19 @@ class MediaManagerInput extends \yii\widgets\InputWidget
      */
     public function run()
     {
+        $div = Html::tag('div', '', ['id' => $this->getId()]);
+        $div = Html::tag('div', $div, ['class' => 'form-group']);
+        $input = $this->renderInput();
+        echo $div . $input;
+
+        $this->registerClientScript();
+    }
+
+    /**
+     * @return string
+     */
+    public function renderInput()
+    {
         $input = '';
         if ($this->hasModel()) {
             switch ($this->inputTag) {
@@ -80,13 +96,7 @@ class MediaManagerInput extends \yii\widgets\InputWidget
                     break;
             }
         }
-
-        $div = Html::tag('div', '', ['id' => $this->getId()]);
-        $div = Html::tag('div', $div, ['class' => 'form-group']);
-        $input = Html::tag('div', $input, ['class' => 'form-group']);
-        echo $div . $input;
-
-        $this->registerClientScript();
+        return $input;
     }
 
     /**
