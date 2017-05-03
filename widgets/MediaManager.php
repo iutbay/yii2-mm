@@ -38,7 +38,7 @@ class MediaManager extends \yii\base\Widget
         $id = $this->getId();
         $options['el'] = "#$id";
         $options = Json::encode($options);
-        $view->registerJs("new MM($options);");
+        $view->registerJs("new MM($options);", \yii\web\View::POS_END);
     }
 
 }
