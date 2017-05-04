@@ -51,7 +51,7 @@ class MediaManagerInputModal extends \yii\widgets\InputWidget
         parent::init();
 
         if ($this->hasModel()) {
-            $this->inputId = Html::getInputId($model, $attribute);
+            $this->inputId = Html::getInputId($this->model, $this->attribute);
         } else {
             $this->inputId = $this->getId() . '-input';
             $this->inputOptions = array_merge($this->inputOptions, [
