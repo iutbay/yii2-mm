@@ -1,6 +1,10 @@
 # Yii2 Media Manager Module
 
-This module is still in its early stages, but feel free to use it and report bugs.
+This module provides a [Media Manager](https://github.com/iutbay/mm) integration to your Yii2 application. It is still in its early stages, but feel free to use it, report bugs, and contribute.
+
+## Demo
+
+[https://www.iutbayonne.univ-pau.fr/~klevron/mm/](https://www.iutbayonne.univ-pau.fr/~klevron/mm/)
 
 ## Installation
 
@@ -49,7 +53,6 @@ Add the following lines in your application configuration :
 ],
 ```
 
-
 ### About Flysystem
 
 This module use [Flysystem](https://github.com/thephpleague/flysystem) (via [creocoder/yii2-flysystem](https://github.com/creocoder/yii2-flysystem)), a *filesystem abstraction which allows you to easily swap out a local filesystem for a remote one*.
@@ -66,4 +69,35 @@ This module use [Imagine](https://github.com/avalanche123/Imagine) (via [yii2-im
 
 ### MediaManagerInput
 
+```php
+use iutbay\yii2\mm\widgets\MediaManagerInput;
+
+echo MediaManagerInput::widget([
+    'name' => 'test', // input name
+    'multiple' => false,
+    'clientOptions' => [
+        'api' => [
+            'listUrl' => Url::to(['/mm/api/list']),
+            // 'uploadUrl' => Url::to(['/mm/api/upload']),
+            // 'downloadUrl' => Url::to(['/mm/api/download']),
+        ],
+    ],
+]);
+```
+
 ### MediaManagerModal
+
+```php
+use iutbay\yii2\mm\widgets\MediaManagerInputModal;
+
+echo MediaManagerInputModal::widget([
+    'name' => 'test', // input name
+    'clientOptions' => [
+        'api' => [
+            'listUrl' => Url::to(['/mm/api/list']),
+            // 'uploadUrl' => Url::to(['/mm/api/upload']),
+            // 'downloadUrl' => Url::to(['/mm/api/download']),
+        ],
+    ],
+]);
+```
