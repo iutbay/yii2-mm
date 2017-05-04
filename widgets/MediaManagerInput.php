@@ -49,7 +49,7 @@ class MediaManagerInput extends \yii\widgets\InputWidget
         }
 
         if ($this->hasModel()) {
-            $this->inputId = Html::getInputId($model, $attribute);
+            $this->inputId = Html::getInputId($this->model, $this->attribute);
         } else {
             $this->inputId = $this->getId() . '-input';
             $this->inputOptions = array_merge($this->inputOptions, [
@@ -65,7 +65,10 @@ class MediaManagerInput extends \yii\widgets\InputWidget
     {
         $div = Html::tag('div', '', ['id' => $this->getId()]);
         $div = Html::tag('div', $div, ['class' => 'form-group']);
+
         $input = $this->renderInput();
+        $input = Html::tag('div', $input, ['class' => 'form-group']);
+
         echo $div . $input;
 
         $this->registerClientScript();
