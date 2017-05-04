@@ -2,6 +2,8 @@
 
 This module provides a [Media Manager](https://github.com/iutbay/mm) integration to your Yii2 application. It is still in its early stages, but feel free to use it, report bugs, and contribute.
 
+![screenshot](https://raw.githubusercontent.com/iutbay/mm/master/doc/images/mm01.jpg)
+
 ## Demo
 
 [https://www.iutbayonne.univ-pau.fr/~klevron/mm/](https://www.iutbayonne.univ-pau.fr/~klevron/mm/)
